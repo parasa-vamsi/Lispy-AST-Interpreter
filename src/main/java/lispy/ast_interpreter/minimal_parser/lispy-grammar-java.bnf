@@ -1,0 +1,69 @@
+/**
+ * S-expression parser.
+ *
+ * 1. Install syntax-cli:
+ *
+ *   npm install -g syntax-cli
+ *
+ * 2. Generate the parser from this grammar:
+ *
+ *   syntax-cli -g parser/eva-grammar.bnf -m LALR1 -o parser/evaParser.js
+ *
+ * Examples:
+ *
+ * Atom: 42, foo, bar, "Hello World"
+ *
+ * List: (), (+ 5 x), (print "hello")
+ * \"([^\"])|(\\.)*\"
+ * Pattern.compile("^\"([^\"])|(\\.)*\""), works
+ * Pattern.compile("^\"([^\"])|(\\\\.)*\"") also
+ * syntax-cli -g com/syntax/lispy-grammar-java.bnf -m LALR1 -o com/syntax/LispyParser.java
+ */
+
+// -----------------------------------------------
+// Lexical grammar (tokens):
+
+%lex
+
+%%
+
+\s+                           return null
+\d+                           return "NUMBER"
+[\w\-+*=<>/]+                 return "SYMBOL"
+\"[^\"]*\"                    return "STRING"
+
+/lex
+
+// -----------------------------------------------
+// Module include
+
+%{
+
+//import java.util.ArrayList;
+
+%}
+
+// -----------------------------------------------
+// Syntactic grammar (BNF):
+
+%%
+
+Exp
+  : Atom
+  | List
+  ;
+
+Atom
+  : NUMBER { $$ = Double.parseDouble((String)$1) }
+  | STRING
+  | SYMBOL
+  ;
+
+List
+  : '(' ListEntries ')' { $$ = $2 }
+  ;
+
+ListEntries
+  : ListEntries Exp { ((List)$1).add($2); $$ = $1 }
+  | /* empty */     { $$ = new ArrayList<Object>() }
+  ;
