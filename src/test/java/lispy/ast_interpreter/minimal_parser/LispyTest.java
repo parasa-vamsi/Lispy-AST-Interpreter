@@ -16,8 +16,10 @@ class LispyTest {
 		Lispy lispy = new Lispy();
 		var expr = lispy.parse("1");
 		assertEquals(1., lispy.eval(expr));
-		expr = lispy.parse("10");
+		expr = lispy.parse("+10");
 		assertEquals(10., lispy.eval(expr));
+		expr = lispy.parse("-5.34");
+		assertEquals(-5.34, lispy.eval(expr));
 	}
 	
 	@Test

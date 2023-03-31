@@ -10,12 +10,11 @@ public class Lispy {
 	
 	public Lispy(String string) {
 		name = string;
-		envGlobal = new Environment();
-		
+		envGlobal = new DefaultGlobalEnvironment();
 	}
 	
 	public Lispy() {
-		this(null);
+		this("default");
 	}
 	
 	public Object parse(String code) {
@@ -44,6 +43,7 @@ public class Lispy {
 		
 		if (isVariableName(expr)) {
 			try {
+				System.out.println("looking up variable: " + expr);
 				return env.lookup((String)expr);
 			} catch (IllegalAccessException e) {
 				e.getMessage();
@@ -60,13 +60,13 @@ public class Lispy {
 		else throw new UnsupportedOperationException("Expression must be an atom (Number, String) or List of expressions. Got " + expr.getClass());
 	}
 	
-	public String evalString(String expr) {
-		return expr.substring(1, expr.length() - 1);
-	}
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public Object evalList(List expr, Environment env) {
 		var op = expr.get(0);
 		if (op.equals("+")) {
+			var ans = this.eval("+", env); // "+" is just a variable name for a function
+			System.out.println("+ lookup: " + ans);
 			var arg1 = (Number) this.eval(expr.get(1), env);
 			var arg2 = (Number) this.eval(expr.get(2), env);
 			return arg1.doubleValue() + arg2.doubleValue();
@@ -152,7 +152,13 @@ public class Lispy {
 	}
 	
 	private boolean isVariableName(Object expr) {
-		if (expr instanceof String) return true;
+		if (expr instanceof String) {
+			var str = (String) expr;
+			System.out.println("String literal contains quote: " + str.contains("\""));
+			if (str.matches("[a-z|A-z][a-z|A-z|0-9]*")) return true;
+			if (str.matches("[*+-/><=]")) return true;
+			else return false;
+		}
 		else return false;
 	}
 	

@@ -17,15 +17,13 @@
  * \"([^\"])|(\\.)*\"
  * Pattern.compile("^\"([^\"])|(\\.)*\""), works
  * Pattern.compile("^\"([^\"])|(\\\\.)*\"") also
-  
-  private static final Pattern[] mLexPatterns = {
+  works
     Pattern.compile("^\\("),
     Pattern.compile("^\\)"),
     Pattern.compile("^\\s+"),
-    Pattern.compile("^\\d+"),
+    Pattern.compile("^[+|-]?(\\d+)(\\.[\\d]*)?"),
     Pattern.compile("^[\\w\\-+*=<>/]+"),
     Pattern.compile("^\"[^\"]*\"")
-  };
  * syntax-cli -g com/syntax/lispy-grammar-java.bnf -m LALR1 -o com/syntax/LispyParser.java
  */
 
@@ -34,10 +32,12 @@
 
 %lex
 
+//DIGIT = \d
+
 %%
 
 \s+                           return null
-[-]?(\d+)                     return "NUMBER"
+[+|-]?(\d)+(\.[\d]*)?         return "NUMBER"
 [\w\-+*=<>/]+                 return "SYMBOL"
 \"[^\"]*\"                    return "STRING"
 
@@ -64,8 +64,8 @@ Exp
 
 Atom
   : NUMBER { $$ = Double.parseDouble((String)$1) }
-  | STRING
-  | SYMBOL {$$ = "\"" + (String)$1 + "\""}
+  | STRING //{ $$ = "\"" + (String)$1 + "\"" }
+  | SYMBOL 
   ;
 
 List

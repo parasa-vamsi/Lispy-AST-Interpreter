@@ -29,6 +29,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Stack;
 
+//import java.util.ArrayList;
+
+/*
+
+The `ParserEvents` class allows defining hooks for certain parse events,
+such as initialization of the parser instance, beginning of the parsing, etc.
+
+Default implementation:
+
   class ParserEvents {
     public static void init() {
       // Parser is created.
@@ -42,6 +51,48 @@ import java.util.Stack;
       // Parsing is completed.
     }
   }
+
+*/
+
+
+  class ParserEvents {
+    public static void init() {
+      // Parser is created.
+    }
+
+    public static void onParseBegin(String _string) {
+      // Parsing is started.
+    }
+
+    public static void onParseEnd(Object _result) {
+      // Parsing is completed.
+    }
+  }
+
+
+/**
+ * Generic tokenizer used by the parser in the Syntax tool.
+ *
+ * https://www.npmjs.com/package/syntax-cli
+ */
+
+/* These should be inserted by the parser class already:
+
+package com.syntax;
+
+import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.Stack;
+
+*/
 
 // --------------------------------------------
 // Tokenizer.
@@ -188,7 +239,7 @@ class Tokenizer {
     Pattern.compile("^\\("),
     Pattern.compile("^\\)"),
     Pattern.compile("^\\s+"),
-    Pattern.compile("^\\d+"),
+    Pattern.compile("^[+|-]?(\\d)+(\\.[\\d]*)?"),
     Pattern.compile("^[\\w\\-+*=<>/]+"),
     Pattern.compile("^\"[^\"]*\"")
   };
