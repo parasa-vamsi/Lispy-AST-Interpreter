@@ -40,20 +40,20 @@ class LispyTest {
 		var mathOp = lispy.parse("(+ 1 5)");
 		assertEquals(6., lispy.eval(mathOp));
 		
-		mathOp = lispy.parse("(- 7 9)");
-		assertEquals(-2., lispy.eval(mathOp));
+		mathOp = lispy.parse("(- 7 -9)");
+		assertEquals(16., lispy.eval(mathOp));
 
-		mathOp = lispy.parse("(* 7 9)");
-		assertEquals(63., lispy.eval(mathOp));
+		mathOp = lispy.parse("(* 8 0.5)");
+		assertEquals(4., lispy.eval(mathOp));
 
-		mathOp = lispy.parse("(/ 7 9)");
-		assertEquals(7./9., lispy.eval(mathOp));
+		mathOp = lispy.parse("(/ 7 2)");
+		assertEquals(3.5, lispy.eval(mathOp));
 
-		mathOp = lispy.parse("(> 7 9)");
+		mathOp = lispy.parse("(> -7.2 +9.6)");
 		assertEquals(false, lispy.eval(mathOp));
 
-		mathOp = lispy.parse("(< 17 9)");
-		assertEquals(false, lispy.eval(mathOp));
+		mathOp = lispy.parse("(< -17.2 -9.)");
+		assertEquals(true, lispy.eval(mathOp));
 	}
 	
 	@Test
