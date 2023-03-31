@@ -25,12 +25,15 @@ class LispyTest {
 	@Test
 	void testStrings() {
 		Lispy lispy = new Lispy();
-		var expr = lispy.parse("Lispy");
-		assertEquals("Lispy", lispy.eval(expr));
-		
+		var expr = lispy.parse("""
+				"string_literal" 
+				""");
+		assertEquals("\"string_literal\"", lispy.eval(expr));
+
 		expr = lispy.parse("""
-				"hello" """);
-		assertEquals("\"hello\"", lispy.eval(expr));
+			KeyWord
+			""");
+		assertEquals("KeyWord", lispy.eval(expr));
 	}
 	
 	@Test
