@@ -32,7 +32,7 @@ class LispyTest {
 	}
 	
 	@Test
-	void testPlus() {
+	void testMathOperations() {
 		Lispy lispy = new Lispy();
 		
 		var mathOp = lispy.parse("(+ 1 5)");
@@ -40,6 +40,18 @@ class LispyTest {
 		
 		mathOp = lispy.parse("(- 7 9)");
 		assertEquals(-2., lispy.eval(mathOp));
+
+		mathOp = lispy.parse("(* 7 9)");
+		assertEquals(63., lispy.eval(mathOp));
+
+		mathOp = lispy.parse("(/ 7 9)");
+		assertEquals(7./9., lispy.eval(mathOp));
+
+		mathOp = lispy.parse("(> 7 9)");
+		assertEquals(false, lispy.eval(mathOp));
+
+		mathOp = lispy.parse("(< 17 9)");
+		assertEquals(false, lispy.eval(mathOp));
 	}
 	
 	@Test

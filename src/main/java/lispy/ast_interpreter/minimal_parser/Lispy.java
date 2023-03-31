@@ -83,6 +83,12 @@ public class Lispy {
 			var arg2 = (Number) this.eval(expr.get(2), env);
 			return arg1.doubleValue() * arg2.doubleValue();
 		}
+
+		if (op.equals("/")) {
+			var arg1 = (Number) this.eval(expr.get(1), env);
+			var arg2 = (Number) this.eval(expr.get(2), env);
+			return arg1.doubleValue() / arg2.doubleValue();
+		}
 		
 		if (op.equals(">")) {
 			var arg1 = (Number) this.eval(expr.get(1), env);
