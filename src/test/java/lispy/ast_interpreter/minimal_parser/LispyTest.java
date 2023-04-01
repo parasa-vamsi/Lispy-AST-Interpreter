@@ -35,6 +35,21 @@ class LispyTest {
 			""");
 		assertEquals(null, lispy.eval(expr));
 	}
+
+	@Test
+	void testVariables() {
+		Lispy lispy = new Lispy();
+
+		var expr = lispy.parse("name");
+		assertEquals(null, lispy.eval(expr));
+
+		expr = lispy.parse("""
+			(var name "Ramu")
+			""");
+		assertEquals("Ramu", lispy.eval(expr));
+		expr = lispy.parse("name");
+		assertEquals("Ramu", lispy.eval(expr));
+	}
 	
 	@Test
 	void testMathOperations() {

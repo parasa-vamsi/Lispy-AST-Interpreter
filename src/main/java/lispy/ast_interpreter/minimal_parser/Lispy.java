@@ -73,7 +73,7 @@ public class Lispy {
 	public Object evalList(List expr, Environment env) {
 		var op = expr.get(0);
 		if (op.equals("+")) {
-			// var ans = this.eval("+", env); // "+" is just a variable name for a function
+			var ans = this.eval(op, env); // "+" is just a variable name for a function
 			// System.out.println("+ lookup: " + ans);
 			var arg1 = (Number) this.eval(expr.get(1), env);
 			var arg2 = (Number) this.eval(expr.get(2), env);
