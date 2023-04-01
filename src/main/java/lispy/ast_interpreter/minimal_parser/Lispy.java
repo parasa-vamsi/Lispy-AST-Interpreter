@@ -43,16 +43,20 @@ public class Lispy {
 		
 		if (isVariableName(expr)) {
 			try {
+				System.out.println("TOKEN: Variable --> " + expr);
 				System.out.println("looking up variable: " + expr);
 				return env.lookup((String)expr);
 			} catch (IllegalAccessException e) {
 				e.getMessage();
+				//e.printStackTrace();
+				//throw new IllegalAccessError("variable not defined/found");
 			}
 		}
 		
 		if (expr instanceof Number) return expr;
 		
 		if (expr instanceof String) {
+			System.out.println("TOKEN: String --> " + expr);
 			return (String) expr;
 		}
 		
@@ -154,7 +158,8 @@ public class Lispy {
 	private boolean isVariableName(Object expr) {
 		if (expr instanceof String) {
 			var str = (String) expr;
-			System.out.println("String literal contains quote: " + str.contains("\""));
+			System.out.println("String begins with quote: " + str.substring(0, 1).contains("\""));
+			if (str.substring(0, 1).contains("\"")) return false; //string literal
 			if (str.matches("[a-z|A-z][a-z|A-z|0-9]*")) return true;
 			if (str.matches("[*+-/><=]")) return true;
 			else return false;
