@@ -28,12 +28,12 @@ class LispyTest {
 		var expr = lispy.parse("""
 				"string_literal" 
 				""");
-		assertEquals("\"string_literal\"", lispy.eval(expr));
+		assertEquals("string_literal", lispy.eval(expr));
 
 		expr = lispy.parse("""
 			KeyWord
 			""");
-		assertEquals("KeyWord", lispy.eval(expr));
+		assertEquals(null, lispy.eval(expr));
 	}
 	
 	@Test
@@ -97,6 +97,20 @@ class LispyTest {
 		assertEquals(5., lispy.eval(expr));
 		expr = lispy.parse("z");
 		assertEquals(5., lispy.eval(expr));
+
+		expr = lispy.parse("""
+			(var alpha "bobby")
+			""");
+		assertEquals("bobby", lispy.eval(expr));
+		expr = lispy.parse("alpha");
+		assertEquals("bobby", lispy.eval(expr));
+
+		expr = lispy.parse("""
+			(var str "25")
+			""");
+		assertEquals("25", lispy.eval(expr));
+		expr = lispy.parse("str");
+		assertEquals("25", lispy.eval(expr));
 	
 	}
 	

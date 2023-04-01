@@ -50,15 +50,19 @@ public class Lispy {
 				e.getMessage();
 				//e.printStackTrace();
 				//throw new IllegalAccessError("variable not defined/found");
+				return null;
 			}
+		}
+		if (expr instanceof String) {
+			System.out.println("TOKEN: String --> " + expr);
+			String str = (String) expr;
+
+			return str.substring(1, str.length() - 1);
 		}
 		
 		if (expr instanceof Number) return expr;
 		
-		if (expr instanceof String) {
-			System.out.println("TOKEN: String --> " + expr);
-			return (String) expr;
-		}
+		
 		
 		if (expr instanceof  List) return evalList((List) expr, env);
 		else throw new UnsupportedOperationException("Expression must be an atom (Number, String) or List of expressions. Got " + expr.getClass());
@@ -69,8 +73,8 @@ public class Lispy {
 	public Object evalList(List expr, Environment env) {
 		var op = expr.get(0);
 		if (op.equals("+")) {
-			var ans = this.eval("+", env); // "+" is just a variable name for a function
-			System.out.println("+ lookup: " + ans);
+			// var ans = this.eval("+", env); // "+" is just a variable name for a function
+			// System.out.println("+ lookup: " + ans);
 			var arg1 = (Number) this.eval(expr.get(1), env);
 			var arg2 = (Number) this.eval(expr.get(2), env);
 			return arg1.doubleValue() + arg2.doubleValue();
