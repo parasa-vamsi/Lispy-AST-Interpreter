@@ -49,7 +49,7 @@ public class Lispy {
 				return env.lookup((String)expr);
 			} catch (IllegalAccessException e) {
 				e.getMessage();
-				//throw new Error(expr + ": variable not defined/found.");
+				throw new Error(expr + ": variable not defined/found.");
 				//return null;
 
 			}
