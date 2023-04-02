@@ -1,6 +1,7 @@
 package lispy.ast_interpreter.minimal_parser;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 //import lispy.ast_interpreter.no_parser.Lispy;

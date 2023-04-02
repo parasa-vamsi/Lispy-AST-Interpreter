@@ -49,7 +49,7 @@ public class Lispy {
 			} catch (IllegalAccessException e) {
 				e.getMessage();
 				//e.printStackTrace();
-				//throw new IllegalAccessError("variable not defined/found");
+				//throw new IllegalAccessException("variable not defined/found");
 				return null;
 			}
 		}
@@ -74,7 +74,7 @@ public class Lispy {
 		var op = expr.get(0);
 		if (op.equals("+")) {
 			var ans = this.eval(op, env); // "+" is just a variable name for a function
-			// System.out.println("+ lookup: " + ans);
+			System.out.println("+ lookup: ");
 			var arg1 = (Number) this.eval(expr.get(1), env);
 			var arg2 = (Number) this.eval(expr.get(2), env);
 			return arg1.doubleValue() + arg2.doubleValue();
