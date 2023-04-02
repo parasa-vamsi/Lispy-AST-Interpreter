@@ -1,6 +1,7 @@
 package lispy.ast_interpreter.minimal_parser;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Lispy {
@@ -48,12 +49,13 @@ public class Lispy {
 				return env.lookup((String)expr);
 			} catch (IllegalAccessException e) {
 				e.getMessage();
-				//e.printStackTrace();
-				//throw new IllegalAccessException("variable not defined/found");
-				return null;
+				//throw new Error(expr + ": variable not defined/found.");
+				//return null;
+
 			}
 		}
-		if (expr instanceof String) {
+
+		if (expr instanceof String && ((String)expr).matches("^\"[^\"]*\"")) {
 			System.out.println("TOKEN: String --> " + expr);
 			String str = (String) expr;
 
@@ -61,8 +63,6 @@ public class Lispy {
 		}
 		
 		if (expr instanceof Number) return expr;
-		
-		
 		
 		if (expr instanceof  List) return evalList((List) expr, env);
 		else throw new UnsupportedOperationException("Expression must be an atom (Number, String) or List of expressions. Got " + expr.getClass());
@@ -73,8 +73,6 @@ public class Lispy {
 	public Object evalList(List expr, Environment env) {
 		var op = expr.get(0);
 		if (op.equals("+")) {
-			var ans = this.eval(op, env); // "+" is just a variable name for a function
-			System.out.println("+ lookup: ");
 			var arg1 = (Number) this.eval(expr.get(1), env);
 			var arg2 = (Number) this.eval(expr.get(2), env);
 			return arg1.doubleValue() + arg2.doubleValue();
@@ -109,6 +107,16 @@ public class Lispy {
 			var arg1 = (Number) this.eval(expr.get(1), env);
 			var arg2 = (Number) this.eval(expr.get(2), env);
 			return arg1.doubleValue() < arg2.doubleValue();
+		}
+
+		if (op.equals("print")) {
+			var printFunction = (LispyCallable)this.eval(op, env); 
+			var args = new ArrayList<Object>();
+			for (int i = 1; i < expr.size(); i++) {
+				args.add(this.eval(expr.get(i), env));
+			}
+			System.out.println("'print' lookup:-> " + printFunction);
+			return printFunction.call(env, args);
 		}
 		
 		if (op.equals("var")) {
@@ -154,7 +162,7 @@ public class Lispy {
 	public Object evalBlock(List expr, Environment env) {
 		Object result = null;
 		var envBlock = new Environment(env);
-		for (int i = 0; i < expr.size(); i++) result = this.eval(expr.get(i), envBlock);
+		for (int i = 1; i < expr.size(); i++) result = this.eval(expr.get(i), envBlock);
 		
 		return result;
 	}
@@ -165,7 +173,7 @@ public class Lispy {
 			System.out.println("String begins with quote: " + str.substring(0, 1).contains("\""));
 			if (str.substring(0, 1).contains("\"")) return false; //string literal
 			if (str.matches("[a-z|A-z][a-z|A-z|0-9]*")) return true;
-			if (str.matches("[*+-/><=]")) return true;
+			//if (str.matches("[*+-/><=]")) return true;
 			else return false;
 		}
 		else return false;

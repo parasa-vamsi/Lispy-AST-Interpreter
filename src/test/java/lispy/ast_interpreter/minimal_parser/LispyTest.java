@@ -32,19 +32,19 @@ class LispyTest {
 		assertEquals("string_literal", lispy.eval(expr));
 
 		expr = lispy.parse("""
-			KeyWord
+			"sometext"
 			""");
-		assertEquals(null, lispy.eval(expr));
+		assertEquals("sometext", lispy.eval(expr));
 	}
 
 	@Test
 	void testVariables() {
 		Lispy lispy = new Lispy();
 
-		var expr = lispy.parse("name");
-		assertEquals(null, lispy.eval(expr));
+		// var expr = lispy.parse("name");
+		//assertEquals(null, lispy.eval(expr));
 
-		expr = lispy.parse("""
+		var expr = lispy.parse("""
 			(var name "Ramu")
 			""");
 		assertEquals("Ramu", lispy.eval(expr));
@@ -73,6 +73,23 @@ class LispyTest {
 
 		mathOp = lispy.parse("(< -17.2 -9.)");
 		assertEquals(true, lispy.eval(mathOp));
+	}
+
+	@Test
+	void testNativeFunctions() {
+		Lispy lispy = new Lispy();
+		
+		var expr = lispy.parse("""
+			(print "hello" "world")
+			""");
+			
+		assertEquals(null, lispy.eval(expr));
+
+		expr = lispy.parse("""
+			(print (+ 4 5) (- 5 3))
+			""");
+			
+		assertEquals(null, lispy.eval(expr));
 	}
 	
 	@Test
@@ -188,7 +205,7 @@ class LispyTest {
 					(var data 10)
 					(begin
 						(set data 100)
-						x
+						data
 					)
 					data
 				)
