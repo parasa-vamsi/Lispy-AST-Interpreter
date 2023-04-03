@@ -295,6 +295,46 @@ class LispyTest {
 	}
 
 	@Test
+	void testHigherOrderFucntions() {
+		Lispy lispy = new Lispy();
+		
+		var expr = lispy.parse("""
+			(begin
+				
+				(def sqr (x)
+					(* x x)
+				)
+
+				(def dist (sqr x y)
+					(+ (sqr x) (sqr y))
+				)
+
+				(dist sqr 2 3)
+			)
+			""");
+			
+		assertEquals(13., lispy.eval(expr));
+
+		
+		expr = lispy.parse("""
+			(begin
+				(def sqr2 (z) (* z z))
+				(begin
+					(def dist2 (sqr a b)
+						(+ (sqr a) (sqr b))
+					)
+
+					(dist2 sqr2 -4 3)
+				)
+			)
+			""");
+			
+		assertEquals(25., lispy.eval(expr));
+	}
+
+
+
+	@Test
 	void testClosures() {
 		Lispy lispy = new Lispy();
 		var expr = lispy.parse("""

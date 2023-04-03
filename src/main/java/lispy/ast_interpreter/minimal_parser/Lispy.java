@@ -49,7 +49,7 @@ public class Lispy {
 				return env.lookup((String)expr);
 			} catch (IllegalAccessException e) {
 				e.getMessage();
-				throw new Error(expr + ": variable not defined/found.");
+				throw new Error(expr + ": variable not defined/found in env=" + env);
 				//return null;
 
 			}
@@ -162,6 +162,7 @@ public class Lispy {
 			var body = expr.get(3);
 			var lispyFunction = new LispyFunction(name, parameters, body, env);
 			env.define(functionName, lispyFunction);
+			System.out.println("function defined--> " + functionName + "; in env=" + env);
 			return lispyFunction;
 		}
 
