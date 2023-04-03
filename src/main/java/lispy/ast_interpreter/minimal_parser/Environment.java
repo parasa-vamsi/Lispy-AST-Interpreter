@@ -9,16 +9,20 @@ public class Environment {
 	Map<String, Object> record;
 	Environment parent;
 	
-	public Environment(Environment parent) {
-		record = new HashMap<>();
+	public Environment(Map record, Environment parent) {
+		this.record = record; 
 		this.parent = parent;
 		record.put("true", true);
 		record.put("false", false);
 		record.put("VERSION", 1.0);
 	}
+
+	public Environment(Environment parent) {
+		this(new HashMap<>(), parent);
+	}
 	
 	public Environment() {
-		this(null);
+		this(new HashMap<>(), null);
 	}
 
 	public Object define(String name, Object value) {

@@ -155,6 +155,33 @@ public class Lispy {
 			return result;
 			
 		}
+
+		if (op.equals("def")) {
+			var functionName = (String) expr.get(1);
+			var parameters = expr.get(2);
+			var body = expr.get(3);
+			var lispyFunction = new LispyFunction(name, parameters, body, env);
+			env.define(functionName, lispyFunction);
+			return lispyFunction;
+		}
+
+		// defaulting to function call execution
+		try {
+			var lispyFunction = (LispyFunction)this.eval(op, env); 
+			var args = new ArrayList<Object>();
+			var activationEnv = new Environment(lispyFunction.env);
+			for (int i = 1; i < expr.size(); i++) {
+				var arg = this.eval(expr.get(i), env);
+			String param = (String)((List<Object>)lispyFunction.parameters).get(i-1);
+				activationEnv.record.put(param, arg);
+				args.add(arg);
+			}
+
+			return this.eval(lispyFunction.body, activationEnv);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 		throw new UnsupportedOperationException("Not implemented error");
 		
 	}

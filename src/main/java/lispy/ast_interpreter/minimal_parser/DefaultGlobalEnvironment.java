@@ -19,7 +19,7 @@ public class DefaultGlobalEnvironment extends Environment{
                 for (var arg : arguments){
                     System.out.println(arg.getClass() + ":> " + arg);
                 }
-                return null;
+                return true;
             }
 
             @Override
