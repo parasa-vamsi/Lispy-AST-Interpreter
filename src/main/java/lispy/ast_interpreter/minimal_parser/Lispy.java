@@ -168,13 +168,11 @@ public class Lispy {
 		// defaulting to function call execution
 		try {
 			var lispyFunction = (LispyFunction)this.eval(op, env); 
-			var args = new ArrayList<Object>();
 			var activationEnv = new Environment(lispyFunction.env);
 			for (int i = 1; i < expr.size(); i++) {
 				var arg = this.eval(expr.get(i), env);
-			String param = (String)((List<Object>)lispyFunction.parameters).get(i-1);
+				String param = (String)((List<Object>)lispyFunction.parameters).get(i-1);
 				activationEnv.record.put(param, arg);
-				args.add(arg);
 			}
 
 			return this.eval(lispyFunction.body, activationEnv);
