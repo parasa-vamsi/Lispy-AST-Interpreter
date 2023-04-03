@@ -363,6 +363,35 @@ class LispyTest {
 		assertEquals(-25., lispy.eval(expr));
 	
 	}
+
+	@Test
+	void testInnerFunctionsWithClosures() {
+		Lispy lispy = new Lispy();
+		
+		var expr = lispy.parse("""
+			(begin
+				(var a 10)
+				(def outer (x)
+					(begin
+						(var b 15)
+						(def inner (y)
+							(begin
+								(set a (+ b y))
+								(set b -4)
+								a
+							)
+						)
+						(inner 2)
+						(set x (+ a b))
+					)
+				)
+				(outer 5)
+			)
+			""");
+			
+		assertEquals(13., lispy.eval(expr));
+	
+	}
 	
 
 }
