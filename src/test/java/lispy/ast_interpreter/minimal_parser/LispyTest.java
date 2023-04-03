@@ -76,98 +76,6 @@ class LispyTest {
 	}
 
 	@Test
-	void testNativeFunctions() {
-		Lispy lispy = new Lispy();
-		
-		var expr = lispy.parse("""
-			(print "hello" "world")
-			""");
-			
-		assertEquals(true, lispy.eval(expr));
-
-		expr = lispy.parse("""
-			(print (+ 4 5) (- 5 3))
-			""");
-			
-		assertEquals(true, lispy.eval(expr));
-	}
-
-	@Test
-	void testFunctions() {
-		Lispy lispy = new Lispy();
-		
-		var expr = lispy.parse("""
-			(begin
-				(def square (x)
-					(* x x)
-				)
-				(square 5)
-			)
-			""");
-			
-		assertEquals(25., lispy.eval(expr));
-
-		expr = lispy.parse("""
-			(begin
-				(def dist (x y)
-					(+ (* x x) (* y y))
-				)
-				(dist 2 3)
-			)
-			""");
-			
-		assertEquals(13., lispy.eval(expr));
-	}
-
-	@Test
-	void testClosures() {
-		Lispy lispy = new Lispy();
-		var expr = lispy.parse("""
-			(begin
-				(var y 10)
-				(def square (x)
-					(+ (* x x) y)
-				)
-				(square 5)
-			)
-			""");
-			
-		assertEquals(35., lispy.eval(expr));
-
-		expr = lispy.parse("""
-			(begin
-				(var y 10)
-				(def square (x)
-					(+ (* x x) y)
-				)
-				(square 5)
-			)
-			""");
-			
-		assertEquals(35., lispy.eval(expr));
-		
-		expr = lispy.parse("""
-			(begin
-				(var a 2)
-				(var b -1)
-				(var c 0.5)
-				(def quadratic (x)
-					(begin
-						(var temp (* a (* x x)))
-						(set temp (+ temp (* b x)))
-						(set temp (+ temp c))
-						temp
-					)
-				)
-				(quadratic 5)
-			)
-			""");
-		double d = 5;	
-		var exp = 2 * (d*d) - d + 0.5;	
-		assertEquals(exp, lispy.eval(expr));
-	}
-	
-	@Test
 	void testListOfExpressions() {
 		Lispy lispy = new Lispy("List of Expressions");
 		
@@ -341,6 +249,99 @@ class LispyTest {
 			""");
 		assertEquals(10., lispy.eval(expr));
 	}
+
+	@Test
+	void testNativeFunctions() {
+		Lispy lispy = new Lispy();
+		
+		var expr = lispy.parse("""
+			(print "hello" "world")
+			""");
+			
+		assertEquals(true, lispy.eval(expr));
+
+		expr = lispy.parse("""
+			(print (+ 4 5) (- 5 3))
+			""");
+			
+		assertEquals(true, lispy.eval(expr));
+	}
+
+	@Test
+	void testFunctions() {
+		Lispy lispy = new Lispy();
+		
+		var expr = lispy.parse("""
+			(begin
+				(def square (x)
+					(* x x)
+				)
+				(square 5)
+			)
+			""");
+			
+		assertEquals(25., lispy.eval(expr));
+
+		expr = lispy.parse("""
+			(begin
+				(def dist (x y)
+					(+ (* x x) (* y y))
+				)
+				(dist 2 3)
+			)
+			""");
+			
+		assertEquals(13., lispy.eval(expr));
+	}
+
+	@Test
+	void testClosures() {
+		Lispy lispy = new Lispy();
+		var expr = lispy.parse("""
+			(begin
+				(var y 10)
+				(def square (x)
+					(+ (* x x) y)
+				)
+				(square 5)
+			)
+			""");
+			
+		assertEquals(35., lispy.eval(expr));
+
+		expr = lispy.parse("""
+			(begin
+				(var y 10)
+				(def square (x)
+					(+ (* x x) y)
+				)
+				(square 5)
+			)
+			""");
+			
+		assertEquals(35., lispy.eval(expr));
+		
+		expr = lispy.parse("""
+			(begin
+				(var a 2)
+				(var b -1)
+				(var c 0.5)
+				(def quadratic (x)
+					(begin
+						(var temp (* a (* x x)))
+						(set temp (+ temp (* b x)))
+						(set temp (+ temp c))
+						temp
+					)
+				)
+				(quadratic 5)
+			)
+			""");
+		double d = 5;	
+		var exp = 2 * (d*d) - d + 0.5;	
+		assertEquals(exp, lispy.eval(expr));
+	}
+	
 	
 	
 	
