@@ -146,25 +146,25 @@ class LispyTest {
 			
 		assertEquals(35., lispy.eval(expr));
 		
-		// var expr = lispy.parse("""
-		// 	(begin
-		// 		(var a 2)
-		// 		(var b -1)
-		// 		(var c 0.5)
-		// 		(def quadratic (x)
-		// 			(begin
-		// 				(var temp (* a (* x x))
-		// 				(set temp (+ temp (* b x)))
-		// 				(set temp (+ temp c))
-		// 				temp
-		// 			)
-		// 		)
-		// 		(quadratic 5)
-		// 	)
-		// 	""");
-		// double d = 5;	
-		// var exp = 2 * (d*d) - d + 0.5;	
-		// assertEquals(exp, lispy.eval(expr));
+		expr = lispy.parse("""
+			(begin
+				(var a 2)
+				(var b -1)
+				(var c 0.5)
+				(def quadratic (x)
+					(begin
+						(var temp (* a (* x x)))
+						(set temp (+ temp (* b x)))
+						(set temp (+ temp c))
+						temp
+					)
+				)
+				(quadratic 5)
+			)
+			""");
+		double d = 5;	
+		var exp = 2 * (d*d) - d + 0.5;	
+		assertEquals(exp, lispy.eval(expr));
 	}
 	
 	@Test
