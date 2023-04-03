@@ -342,8 +342,27 @@ class LispyTest {
 		assertEquals(exp, lispy.eval(expr));
 	}
 	
+	@Test
+	void testInnerFunctions() {
+		Lispy lispy = new Lispy();
+		
+		var expr = lispy.parse("""
+			(begin
+				(def square_neg (x)
+					(begin
+						(def linear (y)
+							(* -1 y)
+						)
+						(linear (* x x))
+					)
+				)
+				(square_neg 5)
+			)
+			""");
+			
+		assertEquals(-25., lispy.eval(expr));
 	
-	
+	}
 	
 
 }
