@@ -2,16 +2,19 @@ package lispy.ast_interpreter.minimal_parser;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Lispy {
 	
 	String name;
 	Environment envGlobal;
+	private boolean jitTranspileDef;
 	
 	public Lispy(String string) {
 		name = string;
 		envGlobal = new DefaultGlobalEnvironment();
+		jitTranspileDef = true;
 	}
 	
 	public Lispy() {
@@ -160,19 +163,35 @@ public class Lispy {
 			var functionName = (String) expr.get(1);
 			var parameters = expr.get(2);
 			var body = expr.get(3);
-			var lispyFunction = new LispyFunction(name, parameters, body, env);
-			env.define(functionName, lispyFunction);
-			System.out.println("function defined--> " + functionName + "; in env=" + env);
-			return lispyFunction;
+
+			if (!this.jitTranspileDef) {
+				var lispyFunction = new LispyFunction(name, parameters, body, env);
+				env.define(functionName, lispyFunction);
+				System.out.println("function defined--> " + functionName + "; in env=" + env);
+				return lispyFunction;
+			}
+			else {
+				// (var functionName (lambda parameters body))
+				System.out.println("JIT-transpiling " + functionName + "; in env=" + env);
+				var lambdaExpr = new ArrayList<Object>();
+				lambdaExpr.add("lambda");
+				lambdaExpr.add(parameters);
+				lambdaExpr.add(body);
+
+				var defExpr = new ArrayList<Object>();
+				defExpr.add("var");
+				defExpr.add(functionName);
+				defExpr.add(lambdaExpr);
+
+				return this.eval(defExpr, env);
+
+			}
 		}
 
 		if (op.equals("lambda")) {
-			//var functionName = (String) expr.get(1);
 			var parameters = expr.get(1);
 			var body = expr.get(2);
 			var lispyFunction = new LispyFunction(null, parameters, body, env);
-			//env.define(functionName, lispyFunction);
-			//System.out.println("function defined--> " + functionName + "; in env=" + env);
 			return lispyFunction;
 		}
 
