@@ -467,6 +467,21 @@ class LispyTest {
 		assertEquals(25., lispy.eval(expr));
 	
 	}
+
+	@Test
+	void testAssignLambda() {
+		Lispy lispy = new Lispy();
+		
+		var expr = lispy.parse("""
+			(begin
+				(var sqr (lambda (x) (* x x)))
+				(sqr 4)
+			)
+			""");
+			
+		assertEquals(16., lispy.eval(expr));
+	
+	}
 	
 
 }
