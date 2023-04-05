@@ -432,6 +432,41 @@ class LispyTest {
 		assertEquals(13., lispy.eval(expr));
 	
 	}
+
+	@Test
+	void testLambdaFunctions() {
+		Lispy lispy = new Lispy();
+		
+		var expr = lispy.parse("""
+			(begin
+				(def onClick (callback)
+					(begin
+						(var x 20)
+						(var y 25)
+						(callback (+ x y))
+					)
+				)
+				(onClick (lambda (data) (* data 10)))
+			)
+			""");
+			
+		assertEquals(450., lispy.eval(expr));
+	
+	}
+
+	@Test
+	void testImmediatlyInvokedLambdaExpression() {
+		Lispy lispy = new Lispy();
+		
+		var expr = lispy.parse("""
+			(begin
+				((lambda (x) (* x x)) 5)
+			)
+			""");
+			
+		assertEquals(25., lispy.eval(expr));
+	
+	}
 	
 
 }

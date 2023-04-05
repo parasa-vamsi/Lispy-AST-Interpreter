@@ -166,6 +166,16 @@ public class Lispy {
 			return lispyFunction;
 		}
 
+		if (op.equals("lambda")) {
+			//var functionName = (String) expr.get(1);
+			var parameters = expr.get(1);
+			var body = expr.get(2);
+			var lispyFunction = new LispyFunction(null, parameters, body, env);
+			//env.define(functionName, lispyFunction);
+			//System.out.println("function defined--> " + functionName + "; in env=" + env);
+			return lispyFunction;
+		}
+
 		// defaulting to function call execution
 		try {
 			var lispyFunction = (LispyFunction)this.eval(op, env); 
