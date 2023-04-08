@@ -112,15 +112,15 @@ public class Lispy {
 			return arg1.doubleValue() < arg2.doubleValue();
 		}
 
-		if (op.equals("print")) {
-			var printFunction = (LispyCallable)this.eval(op, env); 
-			var args = new ArrayList<Object>();
-			for (int i = 1; i < expr.size(); i++) {
-				args.add(this.eval(expr.get(i), env));
-			}
-			System.out.println("'print' lookup:-> " + printFunction);
-			return printFunction.call(env, args);
-		}
+		// if (op.equals("print")) {
+		// 	var printFunction = (LispyNativeFunction)this.eval(op, env); 
+		// 	var args = new ArrayList<Object>();
+		// 	for (int i = 1; i < expr.size(); i++) {
+		// 		args.add(this.eval(expr.get(i), env));
+		// 	}
+		// 	System.out.println("'print' lookup:-> " + printFunction);
+		// 	return printFunction.call(env, args);
+		// }
 		
 		if (op.equals("var")) {
 			var name = (String) expr.get(1);
@@ -195,22 +195,38 @@ public class Lispy {
 			return lispyFunction;
 		}
 
+
 		// defaulting to function call execution
 		try {
-			var lispyFunction = (LispyFunction)this.eval(op, env); 
+			var lispyCallable = (LispyCallable)this.eval(op, env);
+			
+			// handle native functions
+			if (lispyCallable.isNative()) {
+				var lispyNativeFunction = (LispyNativeFunction) lispyCallable;
+				var args = new ArrayList<Object>();
+				for (int i = 1; i < expr.size(); i++) {
+					args.add(this.eval(expr.get(i), env));
+				}
+				System.out.println("'print' lookup:-> " + lispyNativeFunction);
+				return lispyNativeFunction.call(env, args);
+
+			}
+			
+			// handle non-native functions
+			var lispyFunction = (LispyFunction) lispyCallable;
 			var activationEnv = new Environment(lispyFunction.env);
 			for (int i = 1; i < expr.size(); i++) {
 				var arg = this.eval(expr.get(i), env);
-				String param = (String)((List<Object>)lispyFunction.parameters).get(i-1);
-				activationEnv.record.put(param, arg);
+				String paramName = (String)((List<Object>)lispyFunction.parameters).get(i-1);
+				activationEnv.record.put(paramName, arg);
 			}
 
 			return this.eval(lispyFunction.body, activationEnv);
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw new UnsupportedOperationException("Not implemented error");
 		}
-		throw new UnsupportedOperationException("Not implemented error");
 		
 	}
 	

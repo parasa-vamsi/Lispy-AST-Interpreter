@@ -18,8 +18,8 @@ class LispyFunction implements LispyCallable{
     }
 
     @Override
-    public Object call(Environment env, List<Object> arguments) {
-        throw new UnsupportedOperationException("Unimplemented method 'call'");
+    public boolean isNative() {
+        return false;
     }
   
 }

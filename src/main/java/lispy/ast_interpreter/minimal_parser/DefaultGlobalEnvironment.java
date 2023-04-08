@@ -11,7 +11,12 @@ public class DefaultGlobalEnvironment extends Environment{
     }
 
     private void setupNativePrint() {
-        var printCallable = new LispyCallable() {
+        var printCallable = new LispyNativeFunction() {
+
+            @Override
+            public boolean isNative() {
+                return true;
+            }
 
             @Override
             public Object call(Environment env, List<Object> arguments) {
