@@ -75,29 +75,6 @@ public class Lispy {
 
 	public Object evalList(List expr, Environment env) {
 		var op = expr.get(0);
-		if (op.equals("+")) {
-			var arg1 = (Number) this.eval(expr.get(1), env);
-			var arg2 = (Number) this.eval(expr.get(2), env);
-			return arg1.doubleValue() + arg2.doubleValue();
-		}
-
-		if (op.equals("-")) {
-			var arg1 = (Number) this.eval(expr.get(1), env);
-			var arg2 = (Number) this.eval(expr.get(2), env);
-			return arg1.doubleValue() - arg2.doubleValue();
-		}
-		
-		if (op.equals("*")) {
-			var arg1 = (Number) this.eval(expr.get(1), env);
-			var arg2 = (Number) this.eval(expr.get(2), env);
-			return arg1.doubleValue() * arg2.doubleValue();
-		}
-
-		if (op.equals("/")) {
-			var arg1 = (Number) this.eval(expr.get(1), env);
-			var arg2 = (Number) this.eval(expr.get(2), env);
-			return arg1.doubleValue() / arg2.doubleValue();
-		}
 		
 		if (op.equals(">")) {
 			var arg1 = (Number) this.eval(expr.get(1), env);
@@ -111,16 +88,6 @@ public class Lispy {
 			var arg2 = (Number) this.eval(expr.get(2), env);
 			return arg1.doubleValue() < arg2.doubleValue();
 		}
-
-		// if (op.equals("print")) {
-		// 	var printFunction = (LispyNativeFunction)this.eval(op, env); 
-		// 	var args = new ArrayList<Object>();
-		// 	for (int i = 1; i < expr.size(); i++) {
-		// 		args.add(this.eval(expr.get(i), env));
-		// 	}
-		// 	System.out.println("'print' lookup:-> " + printFunction);
-		// 	return printFunction.call(env, args);
-		// }
 		
 		if (op.equals("var")) {
 			var name = (String) expr.get(1);
@@ -245,6 +212,7 @@ public class Lispy {
 			if (str.substring(0, 1).contains("\"")) return false; //string literal
 			if (str.matches("[a-z|A-z][a-z|A-z|0-9]*")) return true;
 			//if (str.matches("[*+-/><=]")) return true;
+			if (str.matches("[*+-/]")) return true;
 			else return false;
 		}
 		else return false;
