@@ -224,7 +224,7 @@ public class Lispy {
 			return this.eval(lispyFunction.body, activationEnv);
 		}
 		catch(Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			throw new UnsupportedOperationException("Not implemented error");
 		}
 		

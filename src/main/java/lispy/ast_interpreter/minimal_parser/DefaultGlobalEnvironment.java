@@ -1,42 +1,16 @@
 package lispy.ast_interpreter.minimal_parser;
 
 import java.util.List;
+import lispy.ast_interpreter.minimal_parser.native_functions.*;
 
 public class DefaultGlobalEnvironment extends Environment{
 
     public DefaultGlobalEnvironment() {
         super();
         System.out.println("Using default global envoirnment");
-        setupNativePrint();
+       
+        this.record.put("+", new AddNativeFunction());
+        this.record.put("print", new PrintNativeFunction());
     }
 
-    private void setupNativePrint() {
-        var printCallable = new LispyNativeFunction() {
-
-            @Override
-            public boolean isNative() {
-                return true;
-            }
-
-            @Override
-            public Object call(Environment env, List<Object> arguments) {
-                
-                for (var arg : arguments){
-                    System.out.println(arg.getClass() + ":> " + arg);
-                }
-                return true;
-            }
-
-            @Override
-            public String toString() {
-                return "<<Native Function>> print";
-            }
-            
-        };
-
-        this.record.put("print", printCallable);
-    }
-
-    
-  
 }
