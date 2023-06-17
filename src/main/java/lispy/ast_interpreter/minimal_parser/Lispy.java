@@ -99,12 +99,10 @@ public class Lispy {
 			var name = (String) expr.get(1);
 			var value = expr.get(2);
 			return env.assign(name, this.eval(value, env));
-			
 		}
 		
 		if (op.equals("begin")) {
 			return evalBlock(expr, env);
-			
 		}
 		
 		if (op.equals("if")) {
@@ -123,7 +121,6 @@ public class Lispy {
 				//System.out.println(result);
 			}
 			return result;
-			
 		}
 
 		if (op.equals("def")) {
@@ -151,7 +148,6 @@ public class Lispy {
 				defExpr.add(lambdaExpr);
 
 				return this.eval(defExpr, env);
-
 			}
 		}
 
@@ -201,7 +197,6 @@ public class Lispy {
 		Object result = null;
 		var envBlock = new Environment(env);
 		for (int i = 1; i < expr.size(); i++) result = this.eval(expr.get(i), envBlock);
-		
 		return result;
 	}
 	
@@ -210,9 +205,9 @@ public class Lispy {
 			var str = (String) expr;
 			System.out.println("String begins with quote: " + str.substring(0, 1).contains("\""));
 			if (str.substring(0, 1).contains("\"")) return false; //string literal
-			if (str.matches("[a-z|A-z][a-z|A-z|0-9]*")) return true;
+			if (str.matches("[a-z|A-z][a-z|A-z|0-9]*")) return true; // identifier regex
 			//if (str.matches("[*+-/><=]")) return true;
-			if (str.matches("[*+-/]")) return true;
+			if (str.matches("[*+-/]")) return true; // native functions
 			else return false;
 		}
 		else return false;
