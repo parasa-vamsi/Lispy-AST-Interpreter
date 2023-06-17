@@ -14,6 +14,7 @@ public class Environment {
 		this.parent = parent;
 		record.put("true", true);
 		record.put("false", false);
+		record.put("none", null);
 		record.put("VERSION", 1.0);
 	}
 

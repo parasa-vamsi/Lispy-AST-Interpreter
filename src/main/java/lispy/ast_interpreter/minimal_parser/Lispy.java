@@ -61,7 +61,6 @@ public class Lispy {
 		if (expr instanceof String && ((String)expr).matches("^\"[^\"]*\"")) {
 			System.out.println("TOKEN: String --> " + expr);
 			String str = (String) expr;
-
 			return str.substring(1, str.length() - 1);
 		}
 		
@@ -158,7 +157,20 @@ public class Lispy {
 			return lispyFunction;
 		}
 
+		if (op.equals("class")) {
+			String name = (String) expr.get(1);
+			var parent = expr.get(2);
+			var body = expr.get(3);
 
+			Environment parentEnv = (Environment) this.eval(parent, env);
+			if (parentEnv == null) parentEnv = env;
+			Environment classEnv = new Environment(parentEnv);
+			this.eval(body, classEnv);
+
+			return env.define(name, classEnv);
+		}
+
+		// -------------------------------------------------------------------------------
 		// defaulting to function call execution
 		try {
 			var lispyCallable = (LispyCallable)this.eval(op, env);
