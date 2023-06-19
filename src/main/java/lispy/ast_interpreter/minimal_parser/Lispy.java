@@ -170,6 +170,10 @@ public class Lispy {
 			return env.define(name, classEnv);
 		}
 
+		if (op.equals("new")) {
+			var classEnv = this.eval(expr.get(1), env);
+		}
+
 		// -------------------------------------------------------------------------------
 		// defaulting to function call execution
 		try {
@@ -215,6 +219,7 @@ public class Lispy {
 	private boolean isVariableName(Object expr) {
 		if (expr instanceof String) {
 			var str = (String) expr;
+			if (str.matches("new")) return false;
 			System.out.println("String begins with quote: " + str.substring(0, 1).contains("\""));
 			if (str.substring(0, 1).contains("\"")) return false; //string literal
 			if (str.matches("[a-z|A-z][a-z|A-z|0-9]*")) return true; // identifier regex

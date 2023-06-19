@@ -480,7 +480,36 @@ class LispyTest {
 			""");
 			
 		assertEquals(16., lispy.eval(expr));
-	
+	}
+
+	@Test
+	void testClass() {
+		Lispy lispy = new Lispy();
+		
+		var expr = lispy.parse("""
+		(begin
+			(class Point none
+				(begin
+					(def constructor (self x y)
+						(begin
+							(set (prop self x) x)
+							(set (prop self y) y)
+						)
+					)
+					
+					(def calc (self)
+						(+ (prop self x) (prop self y))
+					)
+
+				)
+			)
+
+			(var p (new Point 10 20))
+			((prop p calc) p)
+		)
+			""");
+		
+		lispy.eval(expr);	
 	}
 	
 
