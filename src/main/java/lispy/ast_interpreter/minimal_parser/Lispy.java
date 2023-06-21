@@ -67,7 +67,7 @@ public class Lispy {
 		if (expr instanceof Number) return expr;
 		
 		if (expr instanceof  List) return evalList((List) expr, env);
-		else throw new UnsupportedOperationException("Expression must be an atom (Number, String) or List of expressions. Got " + expr.getClass());
+		else throw new UnsupportedOperationException("Expression must be an atom (Number, String) or List of expressions. Got " + expr.getClass() + ":" + expr.toString());
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -171,7 +171,8 @@ public class Lispy {
 		}
 
 		if (op.equals("new")) {
-			var classEnv = this.eval(expr.get(1), env);
+			Environment classEnv = (Environment) this.eval(expr.get(1), env);
+			Environment instanceEnv = new Environment(classEnv);
 		}
 
 		// -------------------------------------------------------------------------------
