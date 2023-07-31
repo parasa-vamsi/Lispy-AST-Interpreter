@@ -173,20 +173,33 @@ public class Lispy {
 		if (op.equals("new")) {
 			Environment classEnv = (Environment) this.eval(expr.get(1), env);
 			Environment instanceEnv = new Environment(classEnv);
+
+			var args = new ArrayList<Object>();
+			args.add(instanceEnv); //self
+			for (int i = 1; i < expr.size(); i++) {
+				args.add(this.eval(expr.get(i), env));
+			}
+			try {
+				return callUserDefinedFunction((LispyFunction) classEnv.lookup("constructor"), args);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		// -------------------------------------------------------------------------------
 		// defaulting to function call execution
 		try {
 			var lispyCallable = (LispyCallable)this.eval(op, env);
+			var args = new ArrayList<Object>();
+			for (int i = 1; i < expr.size(); i++) {
+				args.add(this.eval(expr.get(i), env));
+			}
 			
 			// handle native functions
 			if (lispyCallable.isNative()) {
 				var lispyNativeFunction = (LispyNativeFunction) lispyCallable;
-				var args = new ArrayList<Object>();
-				for (int i = 1; i < expr.size(); i++) {
-					args.add(this.eval(expr.get(i), env));
-				}
+				
 				System.out.println("'print' lookup:-> " + lispyNativeFunction);
 				return lispyNativeFunction.call(env, args);
 
@@ -194,20 +207,26 @@ public class Lispy {
 			
 			// handle non-native functions
 			var lispyFunction = (LispyFunction) lispyCallable;
-			var activationEnv = new Environment(lispyFunction.env);
-			for (int i = 1; i < expr.size(); i++) {
-				var arg = this.eval(expr.get(i), env);
-				String paramName = (String)((List<Object>)lispyFunction.parameters).get(i-1);
-				activationEnv.record.put(paramName, arg);
-			}
-
-			return this.eval(lispyFunction.body, activationEnv);
+			return callUserDefinedFunction(lispyFunction, args);
+			
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			throw new UnsupportedOperationException("Not implemented error");
 		}
 		
+	}
+
+	private Object callUserDefinedFunction(LispyFunction lispyFunction, List<Object> args) {
+		var activationEnv = new Environment(lispyFunction.env);
+		for (int i = 0; i < args.size(); i++) {
+			String paramName = (String) ((List<Object>) lispyFunction.parameters).get(i);
+			var arg = args.get(i);
+			activationEnv.record.put(paramName, arg);
+		}
+
+		return this.eval(lispyFunction.body, activationEnv);
+
 	}
 	
 	public Object evalBlock(List expr, Environment env) {

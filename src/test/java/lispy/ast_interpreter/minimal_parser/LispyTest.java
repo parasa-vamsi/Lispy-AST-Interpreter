@@ -485,9 +485,12 @@ class LispyTest {
 	@Test
 	void testClass() {
 		Lispy lispy = new Lispy();
-		
-		var expr = lispy.parse("""
-		(begin
+
+		/*
+		 (var p (new Point 10 20))
+			((prop p calc) p)
+
+			(begin
 			(class Point none
 				(begin
 					(def constructor (self x y)
@@ -505,9 +508,31 @@ class LispyTest {
 			)
 
 			(var p (new Point 10 20))
-			((prop p calc) p)
+
+			
 		)
-			""");
+		 */
+		
+		var expr = lispy.parse("""
+				(begin
+				(class Point none
+					(begin
+						(def constructor (self x y)
+							(begin
+								(set (prop self x) x)
+								(set (prop self y) y)
+							)
+						)
+						
+						(def calc (self)
+							(+ (prop self x) (prop self y))
+						)
+
+					)
+				)
+
+			)
+		""");
 		
 		lispy.eval(expr);	
 	}
