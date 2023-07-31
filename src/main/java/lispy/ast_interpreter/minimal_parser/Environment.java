@@ -40,7 +40,7 @@ public class Environment {
 	
 	public Environment resolve(String name) throws IllegalAccessException {
 		if (this.record.containsKey(name)) return this;
-		if (this.parent == null)  throw new IllegalAccessException("Variable not defined");
+		if (this.parent == null)  throw new IllegalAccessException(name + " :> Variable not defined in env --> " + this);
 		return this.parent.resolve(name);
 	}
 

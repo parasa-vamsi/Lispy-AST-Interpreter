@@ -7,7 +7,7 @@ public class DefaultGlobalEnvironment extends Environment{
 
     public DefaultGlobalEnvironment() {
         super();
-        System.out.println("Using default global envoirnment");
+        System.out.println("Using default global envoirnment: " + this);
        
         this.record.put("+", new AddNativeFunction());
         this.record.put("-", new SubtractNativeFunction());

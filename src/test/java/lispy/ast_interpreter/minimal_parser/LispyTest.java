@@ -487,9 +487,6 @@ class LispyTest {
 		Lispy lispy = new Lispy();
 
 		/*
-		 (var p (new Point 10 20))
-			((prop p calc) p)
-
 			(begin
 			(class Point none
 				(begin
@@ -508,33 +505,29 @@ class LispyTest {
 			)
 
 			(var p (new Point 10 20))
-
-			
+			((prop p calc) p)
 		)
 		 */
 		
 		var expr = lispy.parse("""
-				(begin
+			(begin
 				(class Point none
 					(begin
 						(def constructor (self x y)
 							(begin
-								(set (prop self x) x)
-								(set (prop self y) y)
+								(var x 10)
 							)
 						)
-						
-						(def calc (self)
-							(+ (prop self x) (prop self y))
-						)
-
 					)
 				)
+				(var p Point)
+				(new Point 10 20)
 
 			)
 		""");
 		
-		lispy.eval(expr);	
+		var ans = lispy.eval(expr);
+		System.out.println(ans.getClass().toGenericString());
 	}
 	
 

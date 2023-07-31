@@ -48,7 +48,7 @@ public class Lispy {
 		if (isVariableName(expr)) {
 			try {
 				System.out.println("TOKEN: Variable --> " + expr);
-				System.out.println("looking up variable: " + expr);
+				System.out.println("looking up variable: " + expr + " (in env --> " + env);
 				return env.lookup((String)expr);
 			} catch (IllegalAccessException e) {
 				e.getMessage();
@@ -57,6 +57,8 @@ public class Lispy {
 
 			}
 		}
+
+		if (expr instanceof String && expr.equals("none")) return null;
 
 		if (expr instanceof String && ((String)expr).matches("^\"[^\"]*\"")) {
 			System.out.println("TOKEN: String --> " + expr);
@@ -101,7 +103,9 @@ public class Lispy {
 		}
 		
 		if (op.equals("begin")) {
-			return evalBlock(expr, env);
+			System.out.println("Defining begin block in env:" + env);
+			var envBlock = new Environment(env);
+			return evalBlock(expr, envBlock);
 		}
 		
 		if (op.equals("if")) {
@@ -158,25 +162,31 @@ public class Lispy {
 		}
 
 		if (op.equals("class")) {
+			System.out.println("Defining class; parent env:" + env);
 			String name = (String) expr.get(1);
 			var parent = expr.get(2);
 			var body = expr.get(3);
 
 			Environment parentEnv = (Environment) this.eval(parent, env);
-			if (parentEnv == null) parentEnv = env;
+			if (parentEnv == null) { 
+				parentEnv = env;
+				System.out.println("Class parent is NONE! Class parent env is " + parentEnv);
+			}
 			Environment classEnv = new Environment(parentEnv);
-			this.eval(body, classEnv);
-
+			//this.eval(body, classEnv);
+			evalBlock((List<Object>)body, classEnv);
+			System.out.println("Class --> " + name + " defined in env --> " + classEnv);
 			return env.define(name, classEnv);
 		}
 
 		if (op.equals("new")) {
-			Environment classEnv = (Environment) this.eval(expr.get(1), env);
+			var className = expr.get(1);
+			Environment classEnv = (Environment) this.eval(className, env);
 			Environment instanceEnv = new Environment(classEnv);
 
 			var args = new ArrayList<Object>();
 			args.add(instanceEnv); //self
-			for (int i = 1; i < expr.size(); i++) {
+			for (int i = 2; i < expr.size(); i++) {
 				args.add(this.eval(expr.get(i), env));
 			}
 			try {
@@ -184,13 +194,13 @@ public class Lispy {
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				System.exit(0);
 			}
 		}
 
 		// -------------------------------------------------------------------------------
 		// defaulting to function call execution
-		try {
-			var lispyCallable = (LispyCallable)this.eval(op, env);
+		var lispyCallable = (LispyCallable)this.eval(op, env);
 			var args = new ArrayList<Object>();
 			for (int i = 1; i < expr.size(); i++) {
 				args.add(this.eval(expr.get(i), env));
@@ -208,12 +218,14 @@ public class Lispy {
 			// handle non-native functions
 			var lispyFunction = (LispyFunction) lispyCallable;
 			return callUserDefinedFunction(lispyFunction, args);
+		// try {
+		// 	System.out.println("Found nothing");
 			
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			throw new UnsupportedOperationException("Not implemented error");
-		}
+		// }
+		// catch(Exception e) {
+		// 	e.printStackTrace();
+		// 	throw new UnsupportedOperationException("Not implemented error");
+		// }
 		
 	}
 
@@ -229,9 +241,10 @@ public class Lispy {
 
 	}
 	
-	public Object evalBlock(List expr, Environment env) {
+	public Object evalBlock(List expr, Environment envBlock) {
 		Object result = null;
-		var envBlock = new Environment(env);
+		//var envBlock = new Environment(env);
+		System.out.println("Block env:" + envBlock);
 		for (int i = 1; i < expr.size(); i++) result = this.eval(expr.get(i), envBlock);
 		return result;
 	}
@@ -239,8 +252,8 @@ public class Lispy {
 	private boolean isVariableName(Object expr) {
 		if (expr instanceof String) {
 			var str = (String) expr;
-			if (str.matches("new")) return false;
-			System.out.println("String begins with quote: " + str.substring(0, 1).contains("\""));
+			if (str.matches("none")) return false;
+			System.out.println(expr + ":> String begins with quote: " + str.substring(0, 1).contains("\""));
 			if (str.substring(0, 1).contains("\"")) return false; //string literal
 			if (str.matches("[a-z|A-z][a-z|A-z|0-9]*")) return true; // identifier regex
 			//if (str.matches("[*+-/><=]")) return true;
